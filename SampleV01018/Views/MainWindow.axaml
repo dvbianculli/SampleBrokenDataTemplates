@@ -1,0 +1,91 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SampleV01018.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
+        Height="450" Width="250"
+        x:Class="SampleV01018.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="SampleV01018">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+  <Grid>
+    <DockPanel>
+      <Grid RowDefinitions="*"
+            DockPanel.Dock="Top"
+            Background="WhiteSmoke">
+        <Menu x:Name="mainMenu" >
+          <Menu.ItemsPanel>
+            <ItemsPanelTemplate>
+              <Grid ColumnDefinitions="Auto, Auto, Auto, *"/>
+            </ItemsPanelTemplate>
+          </Menu.ItemsPanel>
+          <MenuItem Grid.Column="0" Header="File">
+            <MenuItem Header="_Recent Files"
+                      HorizontalAlignment="Stretch">
+              <MenuItem.Items>
+                <Binding Path="RecentFileVMs"/>
+              </MenuItem.Items>
+              <MenuItem.DataTemplates>
+                <DataTemplate DataType="vm:FileViewModel">
+                  <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" IsThreeState="False"/>
+                    <TextBlock Text="{Binding FileName}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                  </StackPanel>
+                </DataTemplate>
+              </MenuItem.DataTemplates>
+              <MenuItem.Styles>
+                <Style Selector="MenuItem">
+                  <Setter Property="VerticalAlignment" Value="Stretch"/>
+                </Style>
+              </MenuItem.Styles>
+            </MenuItem>
+          </MenuItem>
+        </Menu>
+      </Grid>
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
+          <TextBlock Text="Solutions" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" />
+          <TreeView x:Name="tvCurrent"
+                    Grid.Row="2"
+                    FontSize="14"
+                    AutoScrollToSelectedItem="True"
+                    Items="{Binding Path=SolutionVMs}">
+            <TreeView.DataTemplates>
+              <TreeDataTemplate DataType="vm:SolutionViewModel"
+                                ItemsSource="{Binding ProjectVMs}">
+                <TextBlock Text="{Binding Name}"/>
+              </TreeDataTemplate>
+              <TreeDataTemplate DataType="vm:ProjectViewModel"
+                                ItemsSource="{Binding ComponentVMs}">
+                <TextBlock Text="{Binding Name}"/>
+              </TreeDataTemplate>
+              <TreeDataTemplate DataType="vm:ComponentViewModel"
+                                ItemsSource="{Binding MemberVMs}">
+                <TextBlock Text="{Binding Name}"/>
+              </TreeDataTemplate>
+              <TreeDataTemplate DataType="vm:MemberViewModel"
+                                ItemsSource="{Binding MemberVMs}">
+                <TextBlock Text="{Binding Name}"/>
+              </TreeDataTemplate>
+            </TreeView.DataTemplates>
+          </TreeView>
+        </Grid>
+      </Grid>
+    </DockPanel>
+
+  </Grid>
+</Window>
